@@ -1,7 +1,6 @@
 import "./globals.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { CircleDollarSign, BarChart, Edit, Book } from "lucide-react"; 
 
 export default function RootLayout({

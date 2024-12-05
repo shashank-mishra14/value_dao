@@ -1,6 +1,5 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
@@ -15,8 +14,11 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+interface ProgressChartProps {
+  data: { day: string; submissions: number; purchase: number }[];
+}
 
-const ProgressChart = ({ data }: any) => (
+const ProgressChart = ({ data }: ProgressChartProps) => (
   <ResponsiveContainer width="100%" height="100%">
     <LineChart data={data}>
       <CartesianGrid strokeDasharray="3 3" />
