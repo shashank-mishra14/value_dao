@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { CircleDollarSign, X } from "lucide-react";
 import { useState } from "react";
+import { ReactNode } from "react";
 import {
   LineChart,
   Line,
@@ -16,6 +17,14 @@ import {
 } from "recharts";
 interface ProgressChartProps {
   data: { day: string; submissions: number; purchase: number }[];
+}
+
+interface HistoryEntryProps {
+  icon: ReactNode; 
+  title: string;
+  subtitle: string;
+  amount: string;
+  iconColor: string; 
 }
 
 const ProgressChart = ({ data }: ProgressChartProps) => (
@@ -33,7 +42,7 @@ const ProgressChart = ({ data }: ProgressChartProps) => (
 );
 
 
-const HistoryEntry = ({ icon, title, subtitle, amount, iconColor }: any) => (
+const HistoryEntry = ({ icon, title, subtitle, amount, iconColor }: HistoryEntryProps) => (
   <div className="flex items-center gap-3 p-3 bg-white rounded-lg border-none">
     <div className={`w-8 h-8 ${iconColor} rounded-full flex items-center justify-center`}>
       {icon}
