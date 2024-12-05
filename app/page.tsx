@@ -1,101 +1,182 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { CircleDollarSign, X } from "lucide-react";
+import { useState } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+
+const ProgressChart = ({ data }: any) => (
+  <ResponsiveContainer width="100%" height="100%">
+    <LineChart data={data}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="day" />
+      <YAxis yAxisId="left" />
+      <YAxis yAxisId="right" orientation="right" domain={[0, 1000]} />
+      <Tooltip />
+      <Line yAxisId="left" type="monotone" dataKey="submissions" stroke="#000" />
+      <Line yAxisId="right" type="monotone" dataKey="purchase" stroke="#22c55e" />
+    </LineChart>
+  </ResponsiveContainer>
+);
+
+
+const HistoryEntry = ({ icon, title, subtitle, amount, iconColor }: any) => (
+  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border-none">
+    <div className={`w-8 h-8 ${iconColor} rounded-full flex items-center justify-center`}>
+      {icon}
+    </div>
+    <div className="flex-1">
+      <div className="font-bold text-lg">{title}</div>
+      <div className="text-sm text-emerald-500">{subtitle} {amount}</div>
+    </div>
+  </div>
+);
+
+
+export default function ChartsPage() {
+  const [mode, setMode] = useState<"buy" | "earn">("buy");
+  const [amount, setAmount] = useState("");
+
+  const chartData = [
+    { day: "M", submissions: 6, purchase: 8 },
+    { day: "T", submissions: 4, purchase: 10 },
+    { day: "W", submissions: 4, purchase: 12 },
+    { day: "T", submissions: 8, purchase: 14 },
+    { day: "F", submissions: 7, purchase: 16 },
+    { day: "S", submissions: 7, purchase: 17 },
+    { day: "S", submissions: 7, purchase: 19 },
+  ];
+
+  const historyData = [
+    {
+      icon: <CircleDollarSign className="w-5 h-5" />,
+      title: "Bought $50 worth of tokens",
+      subtitle: "+",
+      amount: "2,000 Tokens",
+      iconColor: "bg-yellow-400",
+    },
+    {
+      icon: <X className="w-5 h-5" />,
+      title: "X Content added",
+      subtitle: "+",
+      amount: "200 Tokens",
+      iconColor: "bg-yellow-400",
+    },
+  ];
+
+  const amountOptions = ["50", "500", "1000"];
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="space-y-4 p-4">
+      <div className="h-[300px] mb-4">
+        <ProgressChart data={chartData} />
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <h2 className="text-3xl font-bold mb-4">$superteam Culture Token</h2>
+
+      <div className="flex p-1 bg-white rounded-full mb-4">
+        <Button
+          variant="ghost"
+          className={`flex-1 rounded-full px-3 py-6 text-lg font-semibold ${mode === "buy" ? "bg-yellow-400 hover:bg-yellow-500" : ""}`}
+          onClick={() => setMode("buy")}
+        >
+          I want to Buy
+        </Button>
+        <Button
+          variant="ghost"
+          className={`flex-1 rounded-full text-lg px-3 py-6 font-semibold ${mode === "earn" ? "bg-yellow-400 hover:bg-yellow-500" : ""}`}
+          onClick={() => setMode("earn")}
+        >
+          I want to Earn
+        </Button>
+      </div>
+
+      {mode === "buy" ? (
+        <div className="space-y-4">
+          <Input
+            placeholder="$ Amount"
+            className="p-7 text-gray-400 text-lg font-medium bg-white rounded-full border-none"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+          <div className="flex gap-2 justify-between">
+            {amountOptions.map((opt, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                className="flex-1 text-lg p-6 border-none text-gray-400 bg-white rounded-full"
+                onClick={() => setAmount(opt)}
+              >
+                $ {opt}
+              </Button>
+            ))}
+          </div>
+          <Button className="w-full text-black text-lg p-6 font-semibold rounded-full border-none bg-yellow-400 hover:bg-yellow-500">
+            Buy
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      ) : (
+        <div className="space-y-4">
+          <Input
+            placeholder="Social Post Public Link"
+            className="p-7 text-gray-400 text-lg font-medium bg-white rounded-full border-none"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <Button className="w-full text-black text-lg p-6 font-semibold rounded-full border-none bg-yellow-400 hover:bg-yellow-500">
+            Submit
+          </Button>
+        </div>
+      )}
+
+     
+      <div className="space-y-2 pt-4">
+        <h3 className="font-bold text-3xl">Bonding Curve Progress</h3>
+        <div className="relative pt-4">
+          <Progress value={15} className="h-2" />
+          <div className="flex justify-between text-lg font-medium text-gray-400 mt-1">
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
+          </div>
+        </div>
+        <p className="text-base font-semibold text-gray-400 tracking-wide">
+          Graduate this coin to uniswap at $69,420 market cap. The bonding curve value is $19,972.
+        </p>
+      </div>
+
+     
+      <div className="space-y-2">
+        <h3 className="font-bold text-3xl">Culture Book Curve Progress</h3>
+        <p className="text-base font-semibold text-gray-400">8 Weeks / 8%</p>
+      </div>
+
+   
+      <div className="space-y-3">
+        <h3 className="font-bold text-3xl">History</h3>
+        <div className="text-base font-semibold text-gray-400">TODAY</div>
+        <div className="space-y-2">
+          {historyData.map((entry, index) => (
+            <HistoryEntry
+              key={index}
+              icon={entry.icon}
+              title={entry.title}
+              subtitle={entry.subtitle}
+              amount={entry.amount}
+              iconColor={entry.iconColor}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
